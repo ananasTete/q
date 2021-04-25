@@ -1,25 +1,33 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from 'views/home/Home.vue'
+const Category = () => import('views/category/Category.vue') 
+const Shopcart = () => import('views/shopcart/Shopcart.vue') 
+const Profile = () => import('views/profile/Profile.vue') 
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    redirect: '/home'
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: function () {
-      return import(/* webpackChunkName: "about" */ '../views/About.vue')
-    }
-  }
+    path: '/home',
+    component: Home,
+  },
+  {
+    path: '/category',
+    component: Category,
+  },
+  {
+    path: '/shopcart',
+    component: Shopcart,
+  },
+  {
+    path: '/profile',
+    component: Profile,
+  },
 ]
 
 const router = new VueRouter({
@@ -27,5 +35,10 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+
+const originalPush = VueRouter.prototype.push                     //解决页面重复点击的报错问题
+VueRouter.prototype.push = function push (location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
 export default router
