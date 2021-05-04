@@ -9,7 +9,7 @@
 
 <script>
 export default {
-  name:'',
+  name:'TabControl',
   data(){
     return {
       currentIndex: 0,        
@@ -18,10 +18,10 @@ export default {
   props: {
     titles:{
       type: Array,
-        default() {
+      default() {
           return [];
       }
-    }
+    },
   },
   methods:{
     itemClick(index) {

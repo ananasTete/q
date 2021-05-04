@@ -9,7 +9,6 @@
       <div class="right">
           <slot name="right"></slot>
       </div>
-
   </div>
 </template>
 
@@ -31,10 +30,10 @@ export default {
     line-height: 44px;
     box-shadow: 0 1px 1px rgba(100, 100, 100, .1);
   }
-  .left , .right{
+  .left , .right{             /**左右插槽占60px */
     width: 60px;
   }
-  .center{
+  .center{                   /**center插槽填满中间 */
     flex-grow: 1;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="goodsListItem">
-    <img :src="goodsItem.show.img" alt="">
+  <div class="goodsListItem" @click="itemClick" >
+    <img :src="showImg" alt="">              <!--使用图片懒加载-->
     <div class="goodsInfo">
       <p>{{goodsItem.title}}</p>
       <p>
@@ -18,12 +18,24 @@ export default {
     return {
     }
   },
+  computed: {      //主页和详情页都用到了商品列表但两个接口中图片在数组中的地址不一样故做个判断
+    showImg() {
+      return this.goodsItem.image || this.goodsItem.show.img;
+    }
+  },
   props: {
     goodsItem: {                    //自定义属性goodsItem拿到父组件的对象数组遍历出的某个对象
       type: Object,
       default() {
         return {}
       }
+    }
+  },
+
+  methods: {
+    itemClick() {
+      //跳转到详情页
+      this.$router.push('/detail/' + this.goodsItem.iid);
     }
   }
 }

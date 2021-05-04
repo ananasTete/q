@@ -6,17 +6,17 @@
       <div slot="center">购物街</div>
     </nav-bar>
     
-    <tab-control :titles="['流行', '新款', '精选']" v-show="isTabFixed" @tabClick="tabClick" ref="tabcontrol"/>
+    <tab-control :titles="['流行', '新款', '精选']" v-show="isTabFixed" @tabClick="tabClick" ref="topTabcontrol" />
 
     <scroll class="scroll-content" ref="scroll" :probe-type="3" @scroll="contentScroll" :pull-up-load="true" @pullingUp="loadMore">   <!--滚动框需要设置一个固定高度，而每次复用时高度都可能不同，所以需要在创建时自定义-->
       
-      <swiper :banners="banners" @swiperImagLoad="swiperImagLoad"/>
+      <home-swiper :banners="banners" @swiperImagLoad="swiperImagLoad"/>
 
       <recommend-view :recommends="recommends" />
     
       <feature-view/>
 
-      <tab-control :titles="['流行', '新款', '精选']"  @tabClick="tabClick" ref="tabcontrol"/>
+      <tab-control :titles="['流行', '新款', '精选']"  @tabClick="tabClick" ref="tabcontrol" />
       <!--tabControl组件发生了点击事件,要在home页面进行响应，子传父：自定义事件-->
 
       <goods-list :goods="showGoods" />
@@ -37,7 +37,7 @@ import TabControl from 'components/content/tabcontrol/TabControl';
 import GoodsList from 'components/content/goods/GoodsList';
 import BackTop from 'components/content/backtop/BackTop';
 
-import Swiper from './childComps/Swiper';
+import HomeSwiper from './childComps/HomeSwiper';
 import RecommendView from './childComps/RecommendView'
 import FeatureView from './childComps/FeatureView';
 
@@ -79,7 +79,7 @@ export default {
     TabControl,
 
     NavBar, 
-    Swiper,
+    HomeSwiper,
     RecommendView,
     FeatureView,
     TabControl,
@@ -97,7 +97,7 @@ export default {
 
   methods: {
 
-  //网络请求相关方法
+  /** 网络请求相关方法 */
 
     getHomeMultidata() {
       getHomeMultidata()
@@ -107,7 +107,6 @@ export default {
         })
     },
     getHomeGoods(type){
-      // const page = this.goods[type].page + 1;
       const page = this.goods[type].page;
       getHomeGoods(type, page)
         .then(res => {
@@ -120,9 +119,13 @@ export default {
     },
 
     
-    //事件监听相关的方法
+    /** 事件监听相关的方法 */
 
     tabClick(index) {
+      //将两个tabcontrol点击选项同步
+      this.$refs.topTabcontrol.currentIndex = index;
+      this.$refs.tabcontrol.currentIndex = index;
+      //根据tabbcontrol的点击获取选项名称，以此确定goodslist显示哪个选项页
       this.currentType = Object.keys(this.goods)[index];   //object.keys()，参数为对象，值为对象的属性名数组,结果表示序号为index的属性名字符串
     },
 

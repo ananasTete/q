@@ -33,6 +33,7 @@ export default {
   mounted() {
     this.bscroll = new BScroll(this.$refs.wrapper, {
       observeDOM: true,                                //开启对content以及content子元素DOM改变的探测。当插件被使用后，当这些DOM 素发生变化时将会触发scroll的refresh方法
+      observeImage: true,
       click: true,                                     //滚动区内元素可以响应click事件
       probeType: this.probeType,                       //是否可以监听scroll事件，即滚动事件，0、1不侦测，2侦测手指滑动带来的滚动，手指离开后的惯性滚动不侦测；3全部侦测
       pullUpLoad: this.pullUpLoad,                     //是否可以监听pullingUp事件，即到达内容区底端后继续上拉
@@ -51,6 +52,9 @@ export default {
   methods: {
     scrollTo(x, y, time=300) {         //不传时间默认300ms
       this.bscroll.scrollTo(x, y, time);
+    },
+    scrollToElement(el, time) {
+      this.bscroll.scrollToElement(el, time, false, false);
     }
   },
   
