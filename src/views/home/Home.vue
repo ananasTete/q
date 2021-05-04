@@ -6,7 +6,8 @@
       <div slot="center">购物街</div>
     </nav-bar>
     
-    
+    <tab-control :titles="['流行', '新款', '精选']" v-show="isTabFixed" @tabClick="tabClick" ref="tabcontrol"/>
+
     <scroll class="scroll-content" ref="scroll" :probe-type="3" @scroll="contentScroll" :pull-up-load="true" @pullingUp="loadMore">   <!--滚动框需要设置一个固定高度，而每次复用时高度都可能不同，所以需要在创建时自定义-->
       
       <swiper :banners="banners" @swiperImagLoad="swiperImagLoad"/>
@@ -15,7 +16,7 @@
     
       <feature-view/>
 
-      <tab-control :titles="['流行', '新款', '精选']" class="tab-control-home"  @tabClick="tabClick" ref="tabcontrol"/>
+      <tab-control :titles="['流行', '新款', '精选']"  @tabClick="tabClick" ref="tabcontrol"/>
       <!--tabControl组件发生了点击事件,要在home页面进行响应，子传父：自定义事件-->
 
       <goods-list :goods="showGoods" />
@@ -63,6 +64,7 @@ export default {
      currentType: 'pop',
      isShowBackTop: false,
      tabOffsetTop: 0,
+     isTabFixed: false,
    }
   },
 
@@ -129,7 +131,12 @@ export default {
     },
 
     contentScroll(position) {
-      this.isShowBackTop = -position.y > 1000;
+
+      //判断backtop是否显示
+      this.isShowBackTop = ( -position.y > 1000 );
+
+      //判断tabcontrol是否吸顶
+      this.isTabFixed = ( -position.y > this.tabOffsetTop);
     },
 
     swiperImagLoad() {
@@ -143,27 +150,20 @@ export default {
 <style scoped>
 
   .home{
-    padding-top: 44px;           /*设置z-index后，nav会将轮播图盖住，弄一个内上边距*/
     height: 100vh;                /**将home的高度设置为视口高度 */
   }
   .home-nav{
     background-color: #ff8198;
     color: #fff;
-
-    position: fixed;           /*将home-nav固定到home页顶部 */
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9;                /*fixed会让home-nav脱离文档流，会被轮播图盖住，设置一下z-index*/
   }
-  .tab-control-home{
-    position: sticky;         /*当距离屏幕顶端一定距离时改为fixed定位 */
-    top: 44px;
-  }
-
   .scroll-content{                   /**better-scroll需要给swiper设置一固定高度，但如果在组件内设置那就不能复用了 */
-    height: calc(100% - 52px);       /**组件实例上的属性会作用于组件的组件模板的根元素，这里正好是swiper元素，可以在这里设置此组件swiper的高度 */
+    height: calc(100% - 96px);       /**组件实例上的属性会作用于组件的组件模板的根元素，这里正好是swiper元素，可以在这里设置此组件swiper的高度 */
     overflow: hidden;                /**100%在盒子模型中指的是内容区的100%，这里有一个内边距，将swiper的大小设置成减去tabbar即可 */
   }
-
+  .fixed {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 44px;
+  }
 </style>
