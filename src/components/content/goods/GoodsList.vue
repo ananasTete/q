@@ -2,7 +2,7 @@
   <div class="goodsList">
     <ul>
       <li v-for="item in goods" :key="item.acm">      <!--根据数组的长度生成多个listItem-->
-        <goods-list-item :goodsItem="item"/> 
+        <goods-list-item :goodsItem="item" /> 
       </li>
     </ul>
   </div>
@@ -23,7 +23,7 @@ export default {
       default() {
         return []
       }
-    }
+    },
   },
   components: {
     GoodsListItem
@@ -32,11 +32,15 @@ export default {
 </script>
 
 <style scoped>
+  .goodsList{
+    width: 100%;
+  }
   .goodsList ul {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    list-style: none;
   }
   .goodsList ul li{
     width: 47%;

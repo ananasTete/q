@@ -25,7 +25,7 @@ export default {
   },
   methods: {
     itemClick() {
-        this.$router.push(this.path);             //1.2没有指定固定的路径，通过自定义属性让每个组件实例绑定到自己的路径
+      this.$router.push(this.path);             //1.2没有指定固定的路径，通过自定义属性让每个组件实例绑定到自己的路径
     }
   }
 }

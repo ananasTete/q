@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from 'views/home/Home.vue'
-const Category = () => import('views/category/Category.vue') 
+const Category = () => import('views/category/Category.vue')                 //路由懒加载
 const Shopcart = () => import('views/shopcart/Shopcart.vue') 
 const Profile = () => import('views/profile/Profile.vue') 
 const Detail = () => import('views/detail/Detail.vue') 

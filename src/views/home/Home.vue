@@ -136,7 +136,7 @@ export default {
     contentScroll(position) {
 
       //判断backtop是否显示
-      this.isShowBackTop = ( -position.y > 1000 );
+      this.isShowBackTop = ( -position.y > this.tabOffsetTop - 44 );
 
       //判断tabcontrol是否吸顶
       this.isTabFixed = ( -position.y > this.tabOffsetTop);

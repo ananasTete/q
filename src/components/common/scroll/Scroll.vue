@@ -50,12 +50,9 @@ export default {
   },
 
   methods: {
-    scrollTo(x, y, time=300) {         //不传时间默认300ms
+    scrollTo(x=0, y=0, time=500) {         //不传时间默认300ms
       this.bscroll.scrollTo(x, y, time);
     },
-    scrollToElement(el, time) {
-      this.bscroll.scrollToElement(el, time, false, false);
-    }
   },
   
 }

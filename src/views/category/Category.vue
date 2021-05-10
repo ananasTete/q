@@ -1,52 +1,170 @@
 <template>
   <div class="category">
-      <h1>分类</h1>
-      <div class="wrapper">
-        <ul>
-          <li v-for="item in 100" :key="item">{{item}}</li>
-        </ul>
+
+    <nav-bar class="cate-nav">
+      <div slot="center">
+        分类
       </div>
+    </nav-bar>
+
+
+    <div class="content">
+      <category-list :cate-list="cateList" @listClick="listClick"/>
       
+      <div class="cateInfo">
+        <tab-control class="head-control" :titles="['综合', '新品', '销量']" @tabClick="tabClick" ref="tabcontrol" v-show="showTab" :tab-index="tabIndex"></tab-control>
+
+        <scroll class="scroll" :pullUpLoad="true" ref="scroll" :probeType="3" @scroll="scroll">
+          <category-goods :sub-list="subList" @goodsImgLoad="goodsImgLoad"></category-goods>
+
+          <tab-control :titles="['综合', '新品', '销量']" @tabClick="tabClick" ref="tabcontrol" :tab-index="tabIndex"></tab-control>
+
+          <goods-list :goods="thisDetail"></goods-list>
+        
+        </scroll>
+      </div>
+
+      <back-top @click.native="backToTop" v-show="showBackTop"/>
+    </div>
+    
   </div>
 </template>
 
 <script>
 
-import BScroll from 'better-scroll';
+import {getCategoryList, getSubCategory, getSubCategoryDetail} from 'network/category.js'
+import CategoryList from './childComps/CategoryList.vue';
+import CategoryGoods from './childComps/CategoryGoods.vue';
+
+import NavBar from 'components/common/navbar/NavBar.vue';
+import Scroll from 'components/common/scroll/Scroll.vue';
+import TabControl from 'components/content/tabcontrol/TabControl.vue';
+import GoodsList from 'components/content/goods/GoodsList.vue';
+import BackTop from 'components/content/backtop/BackTop';
 
 export default {
-  name:'Category',
-  data(){
-   return {
-     bscroll: null,
-   }
+  components: { 
+    CategoryList,
+    NavBar,
+    CategoryGoods,
+    Scroll,
+    TabControl,
+    GoodsList,
+    BackTop,
   },
-  mounted() {
-    this.bscroll = new BScroll('.wrapper', {
-      probeType: 3,             //是否可以实时监听内容的顶端到容器顶端的距离即scroll事件，0、1不侦测，2侦测手指滑动带来的滚动，手指离开后的惯性滚动不侦测；3全部侦测
-      pullUpLoad: true,         //是否可以监听到上拉事件，如pullingUp
-    })
-
-    this.bscroll.on('scroll', (position) => {
-      console.log(position);
-    })
-
-    this.bscroll.on('pullingUp', ()=> {    //监听pullingUp事件，当滚动到底部上拉时触发
-      console.log('下拉加载更多');
-
-      setTimeout(() => {                         //设置一个延时，防止多次连续请求
-        this.bscroll.finishPullUp();             //否则只能监听一次pullingUp事件，再拉就没用了
-      },2000)
+  
+  data(){
+    return {
+     cateList: [],        //左侧导航栏
+     subList: [],         //右侧商品分类
+     detailList:[],        //右侧商品
+     currentIndex: -1,
+     currentType: 'pop',
+     showDetail: false,
+     showBackTop: false,
+     tabOffsetTop: 0,
+     showTab: false,
+     tabIndex: 0,
      
-    })
+    }
+  },
+  computed: {
+    thisDetail(){
+      // console.log(this.detailList[this.currentIndex].listItem)
+      // console.log( this.detailList[this.currentIndex].listItem);
+      if (this.currentIndex === -1) return []
+      return this.detailList[this.currentIndex][this.currentType];
+    }
+  },
+  created() {
+    getCategoryList()
+      .then((result) => {
+        // console.log(result.data.data.category);
+        this.cateList = result.data.data.category.list;
+        for(let i in this.cateList) {
+          this.detailList[i] = {
+            'pop': [],
+            'new': [],
+            'sell': [],
+          }
+        }
+        // console.log(this.detailList);
+        this.listClick(0);
+      })
+    
+  },
+  methods: {
+    listClick(index) {
+      this.currentIndex = index;
+      getSubCategory(this.cateList[index].maitKey)
+      .then((result) => {
+        // console.log(result);
+        this.subList = result.data.data.list;
+        this.getSubCategoryDetail('pop');
+        this.getSubCategoryDetail('new');
+        this.getSubCategoryDetail('sell');
+      })
+    },
+    getSubCategoryDetail(type) {
+      const miniWallkey = this.cateList[this.currentIndex].miniWallkey;
+      // console.log(miniWallkey);
+      getSubCategoryDetail(miniWallkey, type)
+      .then((result) => {
+        // console.log(result.data);
+        // console.log(this.detailList);
+        this.detailList[this.currentIndex][type] = result.data;
+        // console.log(this.detailList[this.currentIndex].listItem[type]);
+        // this.showDetail = true;  
+        this.detailList = { ...this.detailList};
+        console.log(this.detailList);
 
+        // console.log(this.showDetail);
+      })
+    },
+
+
+    tabClick(index) {
+      this.tabIndex = index;
+      switch (index) {
+        case 0 :
+          this.currentType = 'pop';
+          break
+        case 1:
+          this.currentType = 'new';
+          break
+        case 2:
+          this.currentType = 'sell';
+      }
+    },
+    scroll(position) {
+      this.showBackTop = (-position.y > this.tabOffsetTop - 44);
+      this.showTab = (-position.y > this.tabOffsetTop);
+    },
+    goodsImgLoad() {
+      this.tabOffsetTop = this.$refs.tabcontrol.$el.offsetTop;
+    },
+    backToTop() {
+      this.$refs.scroll.scrollTo();
+    } 
   }
 }
 </script>
 
 <style scoped>
-  .wrapper{
-    height: 400px;
-    overflow: hidden;
-  }
+.cate-nav{
+  background-color: #ff8198;
+  color: #fff;
+}
+.content{
+  display: flex;
+}
+.cateInfo{
+  width: 75vw;
+  height: calc(100vh - 96px);
+}
+.scroll{
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
 </style>
