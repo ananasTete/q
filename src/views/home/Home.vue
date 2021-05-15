@@ -57,7 +57,7 @@ export default {
      banners: [],
      recommends: [],
      goods: {
-       'pop': {page: 1, list: []},      //用于+=每次请求到的数据
+       'pop': {page: 1, list: []},     
        'new': {page: 1, list: []},
        'sell': {page: 1, list: []},
      },
@@ -102,7 +102,7 @@ export default {
     getHomeMultidata() {
       getHomeMultidata()
         .then(res => {
-          this.banners = res.data.data.banner.list;         //如果不传给数据，那么created()执行完毕后res就会被销毁
+          this.banners = res.data.data.banner.list;         //created()执行完毕后res就会被销毁，所以需要将请求到的数据保存到视图中
           this.recommends = res.data.data.recommend.list;
         })
     },
@@ -110,6 +110,7 @@ export default {
       const page = this.goods[type].page;
       getHomeGoods(type, page)
         .then(res => {
+          // console.log(res);
           this.goods[type].list.push(...res.data.data.list);    //将请求到的数据push到对应类型数据的list数组中
           this.goods[type].page +=1 ;                           //page+1,下次请求时直接请求下一页数据，不用每次都要指定页数
         })
@@ -125,8 +126,9 @@ export default {
       //将两个tabcontrol点击选项同步
       this.$refs.topTabcontrol.currentIndex = index;
       this.$refs.tabcontrol.currentIndex = index;
+
       //根据tabbcontrol的点击获取选项名称，以此确定goodslist显示哪个选项页
-      this.currentType = Object.keys(this.goods)[index];   //object.keys()，参数为对象，值为对象的属性名数组,结果表示序号为index的属性名字符串
+      this.currentType = Object.keys(this.goods)[index];   //object.keys()，参数为对象，值为对象属性名的字符串数组,结果表示序号为index的属性名字符串
     },
 
     backTopClick() {

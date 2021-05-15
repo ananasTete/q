@@ -1,7 +1,7 @@
 <template>
   <div class="detail">
   
-    <detail-navbar @navClick="navClick" ref="navbar"/>
+    <detail-navbar @navClick="navClick" ref="navbar" :currentIndex="navIndex"/>
 
     <scroll class="scroll-content" :pull-up-load="true" :probe-type="3" ref="scroll" @scroll="scroll">
 
@@ -117,17 +117,17 @@ export default {
 
   methods: {
     navClick(index) {
-      this.$refs.scroll.scrollTo(0, -this.toThemes[index]+44, 300)
+      this.$refs.scroll.scrollTo(0, -this.toThemes[index] + 44, 300)
     },
 
     imgLoad() {
       this.toThemes = [],
-        this.toThemes.push(0),
-        this.toThemes.push(this.$refs.param.$el.offsetTop);
-        this.toThemes.push(this.$refs.comment.$el.offsetTop);
-        this.toThemes.push(this.$refs.goodslist.$el.offsetTop);
-        this.toThemes.push(Number.MAX_VALUE);
-        console.log(this.toThemes);
+      this.toThemes.push(0),
+      this.toThemes.push(this.$refs.param.$el.offsetTop);
+      this.toThemes.push(this.$refs.comment.$el.offsetTop);
+      this.toThemes.push(this.$refs.goodslist.$el.offsetTop);
+      this.toThemes.push(Number.MAX_VALUE);
+      // console.log(this.toThemes);
     },
     scroll(position) {
       const positionY = -position.y
@@ -135,10 +135,8 @@ export default {
         i -= 0;    //字符串类型到数字型的隐式转换
 
         //  定义navIndex=0,为了让i改变后再给navIndex赋值，否则从一个区域到另一个区域距离很长，会给navbar赋值好多次，这样只有滚动到另一个区域时再赋值
-        if(this.currentIndex !== i && ( positionY >= this.toThemes[i] && positionY < this.toThemes[i+1])) {
+        if(this.currentIndex !== i && ( positionY >= this.toThemes[i] - 44 && positionY < this.toThemes[i+1] - 44)) {
           this.navIndex = i;
-          console.log(this.navIndex);
-          this.$refs.navbar.currentIndex = this.navIndex; 
         }
       }
       this.listenShowBackTop(positionY);
@@ -155,7 +153,7 @@ export default {
       this.$store.dispatch('addCart', product).then(res => {
         
         //可以在此添加一个防抖
-        this.$toast.show(res, 800);
+      this.$toast.show(res, 800);
 
       });
     },

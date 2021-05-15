@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import {deBounce} from 'common/utils.js'
 export default {
   name:'DetailGoodsInfo.vue',
 
@@ -21,6 +22,8 @@ export default {
 
   methods: {
     imgLoad() {
+      // const emit = deBounce(this.$emit('imgLoad'), 1000);
+      // emit();
       this.$emit('imgLoad');
     }
   }

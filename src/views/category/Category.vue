@@ -70,16 +70,13 @@ export default {
   },
   computed: {
     thisDetail(){
-      // console.log(this.detailList[this.currentIndex].listItem)
-      // console.log( this.detailList[this.currentIndex].listItem);
-      if (this.currentIndex === -1) return []
+      if (this.currentIndex === -1) return [] ;
       return this.detailList[this.currentIndex][this.currentType];
     }
   },
   created() {
     getCategoryList()
       .then((result) => {
-        // console.log(result.data.data.category);
         this.cateList = result.data.data.category.list;
         for(let i in this.cateList) {
           this.detailList[i] = {
@@ -88,7 +85,6 @@ export default {
             'sell': [],
           }
         }
-        // console.log(this.detailList);
         this.listClick(0);
       })
     
@@ -98,7 +94,6 @@ export default {
       this.currentIndex = index;
       getSubCategory(this.cateList[index].maitKey)
       .then((result) => {
-        // console.log(result);
         this.subList = result.data.data.list;
         this.getSubCategoryDetail('pop');
         this.getSubCategoryDetail('new');
@@ -107,18 +102,11 @@ export default {
     },
     getSubCategoryDetail(type) {
       const miniWallkey = this.cateList[this.currentIndex].miniWallkey;
-      // console.log(miniWallkey);
       getSubCategoryDetail(miniWallkey, type)
       .then((result) => {
-        // console.log(result.data);
-        // console.log(this.detailList);
+        console.log(result);
         this.detailList[this.currentIndex][type] = result.data;
-        // console.log(this.detailList[this.currentIndex].listItem[type]);
-        // this.showDetail = true;  
         this.detailList = { ...this.detailList};
-        console.log(this.detailList);
-
-        // console.log(this.showDetail);
       })
     },
 
