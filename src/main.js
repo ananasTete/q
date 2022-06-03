@@ -5,6 +5,8 @@ import store from './store'
 import toast from 'components/common/toast/index.js'
 import FastClick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
+import "tailwindcss/tailwind.css"
+
 
 Vue.use(toast);  //安装 toast插件，自动调用 toast的 install方法
 

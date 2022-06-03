@@ -1,6 +1,5 @@
 <template>
-  <div>
-      
+  <div>  
     <TabBar>
       <TabbarItem path='/home'>
         <img slot="item-icon" src="~assets/img/tabbar/home.svg" alt="">

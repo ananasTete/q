@@ -2,7 +2,7 @@
   <div>
     <shop-cart-item v-for="(item, index) in shopCartList" :key="index" :product="item"></shop-cart-item>
   </div>
-</template>
+</template> 
 
 <script>
 import { mapGetters } from 'vuex'

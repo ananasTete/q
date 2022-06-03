@@ -36,6 +36,10 @@ const routes = [
       showTabbar: false,
     }
   },
+  {
+    path: '/test',
+    component: () => import('views/test.vue')
+  }
 ]
 
 const router = new VueRouter({

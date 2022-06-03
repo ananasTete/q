@@ -4,7 +4,7 @@
       <router-view/>
     </keep-alive>
 
-    <main-tabbar v-show="this.$route.meta.showTabbar == undefined ? true : (this.$route.meta.showTabbar)"/>
+    <main-tabbar v-show="this.$route.meta.showTabbar == undefined ? true : false"/>
   </div>
 </template>
 

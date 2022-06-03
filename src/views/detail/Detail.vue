@@ -153,7 +153,7 @@ export default {
       this.$store.dispatch('addCart', product).then(res => {
         
         //可以在此添加一个防抖
-      this.$toast.show(res, 800);
+      this.$toast.show(res, 800); 
 
       });
     },
